@@ -22,7 +22,7 @@ export async function getSimplifiedDom() {
     elementLists
   ) as HTMLElement;
 
-  return JSON.stringify(elementLists, null, 1);
+  return elementLists.map(l => `${l[0]}: ${l[1]}, ${l[2]}`).join('\n')
 }
 
 function generateSimplifiedDom(
@@ -81,7 +81,7 @@ function generateSimplifiedDom(
   if (interactive) {
     interactiveElements.push(element as HTMLElement);
     container.setAttribute('id', element.getAttribute('data-id') as string);
-    elementLists.push([element.getAttribute('data-id') as string, element.tagName, `${element.getAttribute('name')}, ${element.textContent as string}`])
+    elementLists.push([element.getAttribute('data-id') as string, element.tagName, `${element.getAttribute('name')}, ${element.textContent as string}`.split('\n').join(' ').trim()])
   }
 
   children.forEach((child) => container.appendChild(child));
