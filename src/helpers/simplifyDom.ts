@@ -13,17 +13,22 @@ export async function getSimplifiedDom() {
 
   const interactiveElements: HTMLElement[] = [];
 
+  // make an array of [id, type, text] for each element
+  let elementLists: [string, string, string][] = [];
+
   const simplifiedDom = generateSimplifiedDom(
     dom.documentElement,
-    interactiveElements
+    interactiveElements,
+    elementLists
   ) as HTMLElement;
 
-  return simplifiedDom;
+  return JSON.stringify(elementLists, null, 1);
 }
 
 function generateSimplifiedDom(
   element: ChildNode,
-  interactiveElements: HTMLElement[]
+  interactiveElements: HTMLElement[],
+  elementLists: [string, string, string][]
 ): ChildNode | null {
   if (element.nodeType === Node.TEXT_NODE && element.textContent?.trim()) {
     return document.createTextNode(element.textContent + ' ');
@@ -36,7 +41,7 @@ function generateSimplifiedDom(
   if (!isVisible) return null;
 
   let children = Array.from(element.childNodes)
-    .map((c) => generateSimplifiedDom(c, interactiveElements))
+    .map((c) => generateSimplifiedDom(c, interactiveElements, elementLists))
     .filter(truthyFilter);
 
   // Don't bother with text that is the direct child of the body
@@ -76,6 +81,7 @@ function generateSimplifiedDom(
   if (interactive) {
     interactiveElements.push(element as HTMLElement);
     container.setAttribute('id', element.getAttribute('data-id') as string);
+    elementLists.push([element.getAttribute('data-id') as string, element.tagName, `${element.getAttribute('name')}, ${element.textContent as string}`])
   }
 
   children.forEach((child) => container.appendChild(child));

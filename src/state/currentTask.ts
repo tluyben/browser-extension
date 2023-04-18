@@ -29,13 +29,13 @@ export type CurrentTaskSlice = {
   history: TaskHistoryEntry[];
   status: 'idle' | 'running' | 'success' | 'error' | 'interrupted';
   actionStatus:
-    | 'idle'
-    | 'attaching-debugger'
-    | 'pulling-dom'
-    | 'transforming-dom'
-    | 'performing-query'
-    | 'performing-action'
-    | 'waiting';
+  | 'idle'
+  | 'attaching-debugger'
+  | 'pulling-dom'
+  | 'transforming-dom'
+  | 'performing-query'
+  | 'performing-action'
+  | 'waiting';
   actions: {
     runTask: (onError: (error: string) => void) => Promise<void>;
     interrupt: () => void;
@@ -96,7 +96,7 @@ export const createCurrentTaskSlice: MyStateCreator<CurrentTaskSlice> = (
             });
             break;
           }
-          const html = pageDOM.outerHTML;
+          const html = pageDOM;//.outerHTML;
 
           if (wasStopped()) break;
           setActionStatus('transforming-dom');
